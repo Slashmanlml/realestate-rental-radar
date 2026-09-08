@@ -1,35 +1,36 @@
-﻿# 🏠 Real Estate Rental Radar — Cazador de Alquileres de Oportunidad
+# Real Estate Rental Radar
 
-![Radar Status](https://github.com/Slashmanlml/realestate-rental-radar/actions/workflows/rentals.yml/badge.svg)
-![Business Model](https://img.shields.io/badge/Model-VIP_Telegram_Channel-gold?style=flat)
-![NodeJS](https://img.shields.io/badge/Node.js-20.x-green?style=flat&logo=node.js)
-![Cloud Engine](https://img.shields.io/badge/Engine-GitHub_Actions_Cron-blue?style=flat&logo=githubactions)
+Filtra publicaciones de alquiler por precio y cantidad de ambientes, descarta las
+ya vistas y despacha las nuevas por Telegram. Se ejecuta con cron de GitHub Actions.
 
-Micro-servicio autónomo de **Inteligencia Inmobiliaria**. Monitorea continuamente portales de alquileres y ventas (Zonaprop, Argenprop, MercadoLibre Inmuebles), detecta publicaciones por debajo de la media de mercado y envía alertas tempranas a canales VIP antes de que se reserven.
+> ### ⚠️ Estado: prototipo
+>
+> **No consulta ningún portal inmobiliario.** El módulo `src/scout.js` devuelve un
+> conjunto fijo de publicaciones de ejemplo con el mismo formato que tendría la
+> fuente real. Lo que está implementado y funciona es el resto: el filtrado por
+> criterios, la deduplicación y el despacho.
+>
+> Para conectarlo de verdad hay que reemplazar el array `currentItems` por una
+> consulta al portal, respetando sus términos de uso y su `robots.txt`.
 
----
-
-## 💼 Modelo de Negocio (Monetización)
-
-```text
-[Portales Inmobiliarios 24/7]
-               │
-               ▼
-[Rental Radar (Análisis de Precio y Ubicación)]
-               │
-               ▼
-[Canal VIP de Alerta Temprana] ───► [Inquilinos / Inversores ($5 - $10 USD/mes)]
-```
-
-### 🏷️ Membresías:
-- **Pase de Búsqueda Activa ($10 USD o $8.000 ARS/mes):** Acceso al canal VIP con alertas en tiempo real y enlace directo al propietario/inmobiliaria.
-
----
-
-## 💻 Ejecución Local
+## Uso
 
 ```bash
-git clone https://github.com/Slashmanlml/realestate-rental-radar.git
-cd realestate-rental-radar
 node index.js
 ```
+
+Con `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID` en el entorno despacha por Telegram;
+sin esas variables corre igual y solo omite el envío.
+
+## Correcciones aplicadas
+
+- **La deduplicación ahora funciona.** Los ids se derivan del contenido
+  (`titulo|barrio|precio`) con un hash, en vez de generarse con `Math.random()`.
+  Antes cada corrida inventaba ids nuevos, nunca coincidían con el histórico y
+  las mismas publicaciones se re-despachaban indefinidamente.
+- **Ya no crashea al guardar.** Se crea el directorio `data/` antes de escribir;
+  antes fallaba con `ENOENT` porque la carpeta no estaba en el repositorio.
+
+## Licencia
+
+MIT

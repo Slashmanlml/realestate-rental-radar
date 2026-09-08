@@ -1,7 +1,17 @@
-﻿const fs = require('fs');
+const crypto = require('crypto');
+const fs = require('fs');
 const path = require('path');
 
 const DB_FILE = path.join(__dirname, '..', 'data', 'propiedades_vistas.json');
+
+/**
+ * Identidad estable derivada del contenido (titulo, barrio, precio).
+ * Antes se usaba Math.random(), asi que cada corrida generaba ids nuevos y el
+ * filtro de duplicados no filtraba nada: se re-despachaba todo en cada ejecucion.
+ */
+const buildId = item => 'PROP-' + crypto.createHash('sha1')
+  .update([item.titulo, item.barrio, item.precio].join('|').toLowerCase())
+  .digest('hex').slice(0, 10);
 
 class RealEstateScout {
     constructor() {
@@ -11,9 +21,9 @@ class RealEstateScout {
     async scanNewListings() {
         console.log('🏠 [RealEstate Scout] Escaneando portales inmobiliarios en busca de oportunidades...');
 
-        const currentListings = [
+        const currentItems = [
             {
-                id: `PROP-PALERMO-${Math.floor(100 + Math.random() * 900)}`,
+                id: null, // se calcula abajo, a partir del contenido
                 titulo: '2 Ambientes con Balcón y Cochera Opcional',
                 barrio: 'Palermo Soho',
                 precio: 360000,
@@ -25,7 +35,7 @@ class RealEstateScout {
                 fecha: new Date().toISOString()
             },
             {
-                id: `PROP-BELGRANO-${Math.floor(100 + Math.random() * 900)}`,
+                id: null, // se calcula abajo, a partir del contenido
                 titulo: 'Monoambiente Divisible Luminoso a Estrenar',
                 barrio: 'Belgrano R',
                 precio: 310000,
@@ -37,7 +47,7 @@ class RealEstateScout {
                 fecha: new Date().toISOString()
             },
             {
-                id: `PROP-CABALLITO-${Math.floor(100 + Math.random() * 900)}`,
+                id: null, // se calcula abajo, a partir del contenido
                 titulo: '3 Ambientes Frente al Parque Rivadavia',
                 barrio: 'Caballito',
                 precio: 490000,
@@ -50,6 +60,11 @@ class RealEstateScout {
             }
         ];
 
+        // Identidad estable: sin esto la deduplicacion no puede funcionar.
+
+        currentItems.forEach(i => { i.id = buildId(i); });
+
+
         let historico = [];
         if (fs.existsSync(DB_FILE)) {
             try {
@@ -60,15 +75,16 @@ class RealEstateScout {
         }
 
         const idsVistos = new Set(historico.map(p => p.id));
-        const oportunidades = currentListings.filter(p => {
+        const oportunidades = currentItems.filter(p => {
             const noVisto = !idsVistos.has(p.id);
             const esOportunidad = p.precio <= this.precioPromedioMercado || p.ambientes >= 3;
             return noVisto && esOportunidad;
         });
 
-        console.log(`📊 [RealEstate Scout] Propiedades analizadas: ${currentListings.length} | Oportunidades: ${oportunidades.length}`);
+        console.log(`📊 [RealEstate Scout] Propiedades analizadas: ${currentItems.length} | Oportunidades: ${oportunidades.length}`);
 
         const actualizado = [...oportunidades, ...historico].slice(0, 100);
+        fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
         fs.writeFileSync(DB_FILE, JSON.stringify(actualizado, null, 2), 'utf-8');
 
         return oportunidades;
