@@ -1,0 +1,38 @@
+[
+  {
+    "id": "PROP-632097b6c0",
+    "titulo": "2 Ambientes con Balcón y Cochera Opcional",
+    "barrio": "Palermo Soho",
+    "precio": 360000,
+    "moneda": "ARS",
+    "expensas": "$ 45.000 ARS",
+    "ambientes": 2,
+    "metros": "48 m²",
+    "link": "https://zonaprop.com.ar/inmueble/sample-palermo-2026",
+    "fecha": "2026-09-08T22:47:43.175Z"
+  },
+  {
+    "id": "PROP-cd79486249",
+    "titulo": "Monoambiente Divisible Luminoso a Estrenar",
+    "barrio": "Belgrano R",
+    "precio": 310000,
+    "moneda": "ARS",
+    "expensas": "$ 30.000 ARS",
+    "ambientes": 1,
+    "metros": "36 m²",
+    "link": "https://zonaprop.com.ar/inmueble/sample-belgrano-2026",
+    "fecha": "2026-09-08T22:47:43.175Z"
+  },
+  {
+    "id": "PROP-bb8fa66d8a",
+    "titulo": "3 Ambientes Frente al Parque Rivadavia",
+    "barrio": "Caballito",
+    "precio": 490000,
+    "moneda": "ARS",
+    "expensas": "$ 60.000 ARS",
+    "ambientes": 3,
+    "metros": "72 m²",
+    "link": "https://zonaprop.com.ar/inmueble/sample-caballito-2026",
+    "fecha": "2026-09-08T22:47:43.175Z"
+  }
+]
