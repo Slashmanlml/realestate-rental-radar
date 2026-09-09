@@ -11,8 +11,25 @@ permissions:
   contents: write
 
 jobs:
-  scan-rentals:
+  test:
     runs-on: ubuntu-latest
+    steps:
+      - name: 1. Checkout repositorio
+        uses: actions/checkout@v4
+
+      - name: 2. Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: 3. Correr tests
+        run: npm test
+
+  scan-rentals:
+    needs: test
+    runs-on: ubuntu-latest
+    # Sin cron manual no tiene sentido escanear: evita correr en cada push.
+    if: github.event_name != 'push'
 
     steps:
       - name: 1. Checkout repositorio

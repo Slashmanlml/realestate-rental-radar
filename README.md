@@ -16,11 +16,30 @@ ya vistas y despacha las nuevas por Telegram. Se ejecuta con cron de GitHub Acti
 ## Uso
 
 ```bash
-node index.js
+cp .env.example .env   # completar TELEGRAM_BOT_TOKEN y TELEGRAM_CHAT_ID
+npm start              # datos de ejemplo
+npm test               # 6 tests, sin dependencias externas
 ```
 
 Con `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID` en el entorno despacha por Telegram;
-sin esas variables corre igual y solo omite el envío.
+sin esas variables corre igual y solo omite el envío. En GitHub Actions esas
+credenciales van en Secrets.
+
+## Stack
+
+Node 20+, sin dependencias de producción. Tests con el runner nativo
+(`node --test`). CI en GitHub Actions (tests primero, escaneo después).
+
+## Docker y logs
+
+```bash
+npm run docker:build
+docker run --rm --env-file .env realestate-rental-radar
+```
+
+`LOG_LEVEL` controla el nivel de log (`debug|info|warn|error`, default `info`).
+Los llamados a Telegram reintentan errores de red y HTTP 429/5xx con backoff
+exponencial (3 intentos); los 4xx fallan rápido sin reintentar.
 
 ## Correcciones aplicadas
 

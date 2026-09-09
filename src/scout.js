@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const fs = require('fs');
 const path = require('path');
+const logger = require('./logger');
 
 const DB_FILE = path.join(__dirname, '..', 'data', 'propiedades_vistas.json');
 
@@ -19,7 +20,7 @@ class RealEstateScout {
     }
 
     async scanNewListings() {
-        console.log('🏠 [RealEstate Scout] Escaneando portales inmobiliarios en busca de oportunidades...');
+        logger.log('🏠 [RealEstate Scout] Escaneando portales inmobiliarios en busca de oportunidades...');
 
         const currentItems = [
             {
@@ -81,7 +82,7 @@ class RealEstateScout {
             return noVisto && esOportunidad;
         });
 
-        console.log(`📊 [RealEstate Scout] Propiedades analizadas: ${currentItems.length} | Oportunidades: ${oportunidades.length}`);
+        logger.log(`📊 [RealEstate Scout] Propiedades analizadas: ${currentItems.length} | Oportunidades: ${oportunidades.length}`);
 
         const actualizado = [...oportunidades, ...historico].slice(0, 100);
         fs.mkdirSync(path.dirname(DB_FILE), { recursive: true });
@@ -92,3 +93,4 @@ class RealEstateScout {
 }
 
 module.exports = RealEstateScout;
+module.exports.buildId = buildId;

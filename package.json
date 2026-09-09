@@ -1,13 +1,16 @@
 {
   "name": "realestate-rental-radar",
   "version": "1.0.0",
-  "description": "",
+  "description": "Radar de alquileres: filtra publicaciones por precio y ambientes, deduplica y despacha por Telegram. Prototipo con datos de ejemplo.",
   "main": "index.js",
+  "engines": { "node": ">=20" },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node index.js",
+    "test": "node --test",
+    "docker:build": "docker build -t realestate-rental-radar ."
   },
-  "keywords": [],
+  "keywords": ["telegram-bot", "real-estate", "alquileres", "automation"],
   "author": "",
-  "license": "ISC",
+  "license": "MIT",
   "type": "commonjs"
 }
